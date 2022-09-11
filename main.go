@@ -297,7 +297,7 @@ func convertCurrency(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		sqlStatement = `SELECT count(id) id FROM currencyrate 
-						WHERE ((currencyfrom=$1 AND currencyto=$2) OR (currencyfrom=$3 AND currencyto=$4))`
+						WHERE ((currencyfrom = ? AND currencyto = ?) OR (currencyfrom = ? AND currencyto = ?))`
 		row = con.QueryRow(sqlStatement, data.CurrencyFrom, data.CurrencyTo, data.CurrencyTo, data.CurrencyFrom)
 		err = row.Scan(&str)
 		IsError = HandleErrorOfSelect(w, err)
