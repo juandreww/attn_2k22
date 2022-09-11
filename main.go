@@ -97,7 +97,7 @@ func saveCurrency(w http.ResponseWriter, r *http.Request) {
 	if IsExist == false {
 		sqlStatement = `
 			INSERT INTO currency (id, name)
-			VALUES ($1, $2)`
+			VALUES (?, ?)`
 		_, err := con.Exec(sqlStatement, data.ID, data.Name)
 		if err != nil {
 			panic(err)
@@ -314,7 +314,7 @@ func convertCurrency(w http.ResponseWriter, r *http.Request) {
 
 		var val1, val2 string
 		sqlStatement = `SELECT currencyfrom, currencyto,rate FROM currencyrate 
-					WHERE ((currencyfrom=$1 AND currencyto=$2) OR (currencyfrom=$3 AND currencyto=$4))
+					WHERE ((currencyfrom = ? AND currencyto = ?) OR (currencyfrom = ? AND currencyto = ?))
 					LIMIT 1`
 		row = con.QueryRow(sqlStatement, data.CurrencyFrom, data.CurrencyTo, data.CurrencyTo, data.CurrencyFrom)
 		err = row.Scan(&val1, &val2, &str)
