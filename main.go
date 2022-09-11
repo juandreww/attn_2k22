@@ -240,7 +240,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 		intval++
 		sqlStatement = `
 			INSERT INTO currencyrate (id, currencyfrom, currencyto, rate)
-			VALUES ($1, $2, $3, $4)`
+			VALUES (?, ?, ?, ?)`
 		_, err = con.Exec(sqlStatement, intval, data.CurrencyFrom, data.CurrencyTo, data.Rate)
 		if err != nil {
 			panic(err)
@@ -273,7 +273,7 @@ func convertCurrency(w http.ResponseWriter, r *http.Request) {
 		var floatval, amount float64
 		check1 := currency{}
 
-		sqlStatement := `SELECT count(id) id FROM currency WHERE (id=$1 OR id=$2);`
+		sqlStatement := `SELECT count(id) id FROM currency WHERE (id = ? OR id = ?);`
 		row := con.QueryRow(sqlStatement, data.CurrencyFrom, data.CurrencyTo)
 		err := row.Scan(&check1.ID)
 		IsError := HandleErrorOfSelect(w, err)
