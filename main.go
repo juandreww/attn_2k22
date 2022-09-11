@@ -82,7 +82,7 @@ func saveCurrency(w http.ResponseWriter, r *http.Request) {
 
 	cur := currency{}
 	IsExist := false
-	sqlStatement := `SELECT id, name FROM currency WHERE (id=$1 OR name=$2);`
+	sqlStatement := `SELECT id, name FROM currency WHERE (id = ? OR name = ?);`
 	row := con.QueryRow(sqlStatement, data.ID, data.Name)
 	err := row.Scan(&cur.ID, &cur.Name,)
 	switch err {
@@ -130,7 +130,6 @@ func listCurrency(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("row is not exist")
 			return
 		case nil:
-			fmt.Println(cur.ID, cur.Name)
 		default:
 			panic(err)
 		}
@@ -180,7 +179,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 		var intval int
 		check1 := currency{}
 
-		sqlStatement := `SELECT count(id) id FROM currency WHERE (id=$1 OR id=$2);`
+		sqlStatement := `SELECT count(id) id FROM currency WHERE (id = ? OR id = ?);`
 		row := con.QueryRow(sqlStatement, data.CurrencyFrom, data.CurrencyTo)
 		err := row.Scan(&check1.ID)
 		IsError := HandleErrorOfSelect(w, err)
@@ -204,7 +203,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		sqlStatement = `SELECT count(id) id FROM currencyrate 
-						WHERE ((currencyfrom=$1 AND currencyto=$2) OR (currencyfrom=$3 AND currencyto=$4))`
+						WHERE ((currencyfrom = ? AND currencyto = ?) OR (currencyfrom = ? AND currencyto = ?))`
 		row = con.QueryRow(sqlStatement, data.CurrencyFrom, data.CurrencyTo, data.CurrencyTo, data.CurrencyFrom)
 		err = row.Scan(&str)
 		IsError = HandleErrorOfSelect(w, err)
