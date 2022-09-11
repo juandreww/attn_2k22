@@ -11,43 +11,10 @@ import (
 	// "os"
 )
 
-const (
-	host = "ec2-52-73-155-171.compute-1.amazonaws.com"
-	port = 5432
-	user = "'awtpbzyctlpydm'"
-	password = "a7bf40c39496f73a03e7412befbc787d29138445d7fce2a34bf31df40cf07d96"
-	dbname = "d4ehughfapgq0k"
-)
-
-type currency struct {
-	ID string
-	Name string
-}
-
-type configconvertrate struct {
-	CurrencyFrom string
-	CurrencyTo string
-	Rate string
-}
-
 var tpl *template.Template
-var con *sql.DB
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
-}
-
-func ConnectDB() *sql.DB {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=require",
-	host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-
-	if err != nil {
-		panic(err)
-	}
-
-	con = db
-	return db
 }
 
 func main() {
@@ -56,7 +23,7 @@ func main() {
 	mux.HandleFunc("/savecurrency", saveCurrency)
 	mux.HandleFunc("/listcurrency", listCurrency)
 	mux.HandleFunc("/listcurrencyrate", listCurrencyRate)
-	mux.HandleFunc("/addconversionrate", addConversionRate)
+	mux.HandleFunc("/addcurrencyrate", addCurrencyRate)
 	mux.HandleFunc("/convertcurrency", convertCurrency)
 	db := ConnectDB()
 	defer db.Close()
@@ -166,7 +133,7 @@ func listCurrencyRate(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "listcurrencyrate.gohtml", list)
 }
 
-func addConversionRate(w http.ResponseWriter, r *http.Request) {
+func addCurrencyRate(w http.ResponseWriter, r *http.Request) {
 	if (r.Method == http.MethodPost) {
 		fmt.Println("This is add conversion rate api: ", r.Method)
 		data := configconvertrate{
@@ -188,7 +155,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 				"error",
 				"All CurrencyID is not found in database",
 			}
-			tpl.ExecuteTemplate(w, "addconversionrate.gohtml", tmp)
+			tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", tmp)
 			return
 		} else {
 			intval, err = strconv.Atoi(check1.ID)
@@ -197,7 +164,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 					"error",
 					"One of the CurrencyID is not found in database",
 				}
-				tpl.ExecuteTemplate(w, "addconversionrate.gohtml", tmp)
+				tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", tmp)
 				return
 			}
 		}
@@ -213,7 +180,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 					"error",
 					"CurrencyRate is not exist in the database",
 				}
-				tpl.ExecuteTemplate(w, "addconversionrate.gohtml", tmp)
+				tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", tmp)
 				return
 			}
 		} else {
@@ -223,7 +190,7 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 					"error",
 					"CurrencyRate already exist in the database",
 				}
-				tpl.ExecuteTemplate(w, "addconversionrate.gohtml", tmp)
+				tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", tmp)
 				return
 			}
 		}
@@ -250,11 +217,11 @@ func addConversionRate(w http.ResponseWriter, r *http.Request) {
 			"succeed",
 			"Currency Rate added",
 		}
-		tpl.ExecuteTemplate(w, "addconversionrate.gohtml", tmp)
+		tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", tmp)
 	} else {
 		fmt.Println("This is add conversion rate api: ", r.Method)
 
-		tpl.ExecuteTemplate(w, "addconversionrate.gohtml", nil)
+		tpl.ExecuteTemplate(w, "addcurrencyrate.gohtml", nil)
 	}
 }
 
