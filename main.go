@@ -11,11 +11,7 @@ import (
 	// "os"
 )
 
-var tpl *template.Template
 
-func init() {
-	tpl = template.Must(template.ParseGlob("templates/*"))
-}
 
 func main() {
 	mux := http.DefaultServeMux
@@ -79,14 +75,7 @@ func saveCurrency(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", data)
 }
 
-func listCurrency(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("This is listcurrency api: ", r.Method)
-	var list []currency
 
-	
-
-	tpl.ExecuteTemplate(w, "listcurrency.gohtml", list)
-}
 
 func listCurrencyRate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("This is listcurrencyrate api: ", r.Method)
