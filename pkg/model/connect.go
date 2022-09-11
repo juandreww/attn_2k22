@@ -23,7 +23,8 @@ func ConnectDB() *sql.DB {
 	db, err := sql.Open("postgres", psqlInfo)
 
 	if err != nil {
-		panic(err)
+		fmt.Println("Error when connecting to DB")
+		log.Fatal(err)
 	}
 
 	con = db
