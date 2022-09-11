@@ -3,8 +3,8 @@ package model
 import (
 	"fmt"
 	"log"
-	"github.com/juandreww/attn_2k22/pkg/views"
 	"database/sql"
+	"github.com/juandreww/attn_2k22/pkg/views"
 )
 
 func readListCurrency(list []views.ConfigConvertRate) ([]views.ConfigConvertRate, error) {
