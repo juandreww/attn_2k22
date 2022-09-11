@@ -3,10 +3,11 @@ package model
 import (
 	"fmt"
 	"log"
-	"pkg/routes/views"
+	"github.com/juandreww/attn_2k22/pkg/views"
+	"database/sql"
 )
 
-func readListCurrency(list []views.ConfigConvertRate) ([]views.Currency, error) {
+func readListCurrency(list []views.ConfigConvertRate) ([]views.ConfigConvertRate, error) {
 	rows, err := con.Query("SELECT id, name FROM currency ORDER BY id ASC")
 	if err != nil {
 		log.Fatal(err)
@@ -14,7 +15,7 @@ func readListCurrency(list []views.ConfigConvertRate) ([]views.Currency, error) 
 	defer rows.Close()
 
 	for rows.Next() {
-		cur := currency{}
+		cur := []views.Currency{}
 		err := rows.Scan(&cur.ID, &cur.Name,)
 		switch err {
 		case sql.ErrNoRows:
