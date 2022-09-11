@@ -83,26 +83,7 @@ func listCurrency(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("This is listcurrency api: ", r.Method)
 	var list []currency
 
-	rows, err := con.Query("SELECT id, name FROM currency ORDER BY id ASC")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		cur := currency{}
-		err := rows.Scan(&cur.ID, &cur.Name,)
-		switch err {
-		case sql.ErrNoRows:
-			fmt.Println("row is not exist")
-			return
-		case nil:
-		default:
-			panic(err)
-		}
-
-		list = append(list, cur)
-	}
+	
 
 	tpl.ExecuteTemplate(w, "listcurrency.gohtml", list)
 }
