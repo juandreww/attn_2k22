@@ -1,11 +1,11 @@
 package views
 
-type currency struct {
+type Currency struct {
 	ID string
 	Name string
 }
 
-type configconvertrate struct {
+type ConfigConvertRate struct {
 	CurrencyFrom string
 	CurrencyTo string
 	Rate string
